@@ -1,59 +1,71 @@
-# 🎙️ OpenVoice Assistant (`open-voice-agent`)
+# 🎙️📍 Open Voice Agent (Siri Replacement & Spatial AI Companion)
 
-**Sub-second latency, privacy-first Siri replacement & hands-free voice interface for local AI Agents.**
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110.0-009688.svg)](https://fastapi.tiangolo.com)
+[![SwiftUI](https://img.shields.io/badge/iOS-SwiftUI-orange.svg)](https://developer.apple.com/xcode/swiftui/)
+[![Jetpack Compose](https://img.shields.io/badge/Android-Jetpack--Compose-green.svg)](https://developer.android.com/jetpack/compose)
 
-[Español](#-visión-en-español) | [English](#-english-overview)
+**Open Voice Agent** es una puerta de enlace multimodal ultra-rápida y privada que convierte cualquier agente de IA autónomo (**Hermes Agent, Claude Code, Codex, OpenCode, Ollama**) en un asistente personal por voz con **conciencia espacial y geolocalización de bajo consumo en tiempo real**.
 
 ---
 
-## 🇪🇸 Visión en Español
+## ✨ Características Principales
 
-`OpenVoice Assistant` es un cliente móvil y servidor de transmisión de voz en tiempo real de código abierto diseñado para reemplazar asistentes comerciales (como Siri o Google Assistant) por un agente de Inteligencia Artificial propio, autónomo y privado.
+- 🎙️ **Full-Duplex Voice Tunnel (Sub-segundo):** Comunicación por WebSockets con audio streaming de ultra-baja latencia (<1s) y respuesta hablada mediante la voz Salomé (`es-CO-SalomeNeural`).
+- 📍 **Spatial Awareness & Battery-Optimized GPS Tracking:** Algoritmo integrado accionado por el coprocesador de movimiento del iPhone (`CoreMotion`) y Android (`FusedLocationProviderClient`) con consumo de batería cercano a cero.
+- 🔮 **UI 3D Reactiva (Mesh FX Shaders):** Visualizador flotante con ondas y malla 3D (estilo Siri / Cyberpunk) que reacciona a la amplitud de voz de tu micrófono y de la respuesta de la IA.
+- 🔘 **Push-to-Talk & Hardware Integration:** Activación inmediata con el **Botón de Acción de iOS**, Widgets y Tiles de Ajustes Rápidos en Android.
+- 🔌 **Universal Agent Adapter System:** Conexión modular transparente con Hermes Agent (Kathy), Claude Code, Codex, Ollama y APIs en la nube.
 
-### 🚀 Características Principales
-* **Latencia Sub-Segundo (< 1 segundo):** Comunicación en tiempo real vía WebSockets con transmisión continua de audio (Full-Duplex Streaming).
-* **Integración con Botón de Acción & Widgets (iOS/Android):** Activación instantánea con un toque desde la pantalla de bloqueo o el botón lateral.
-* **Pipeline de Procesamiento de Voz:**
-  1. **STT (Speech-to-Text):** Transcripción ultrarrápida con Whisper / Groq API.
-  2. **Cerebro (LLM Engine):** Procesamiento contextual con Hermes Agent / Ollama / OpenAI.
-  3. **TTS (Text-to-Speech):** Síntesis de voz natural y fluida en alta definición (edge-tts / Salomé voice).
-* **Soporte Manos Libres:** Detección de palabra de activación (*"Oye Kathy"*) y visualización de ondas de audio interactivas.
+---
 
-### 🏗️ Arquitectura de Audio
+## 🏗️ Arquitectura del Sistema
+
 ```text
-📱 App Móvil (Voice UI / Action Button)
-       │
-       └── (Audio Stream vía WebSockets) ──► 🐍 Engine (FastAPI + Asyncio)
-                                                     │
-                                                     ├──► 🎙️ Whisper STT
-                                                     ├──► 🧠 Hermes Agent / LLM
-                                                     └──► 🔊 Edge-TTS (Audio Out)
+                               ┌────────────────────────────────────────────────────────┐
+                               │             AGENT ADAPTERS (Enchufables)               │
+                               ├────────────────────────────────────────────────────────┤
+                               │ 1. HermesAdapter      ➔ Tu Servidor (Kathy)            │
+[ App Móvil iOS/Android ]      │ 2. OpenAIAdapter      ➔ Ollama / Groq / ChatGPT / vLLM │
+   │                │          │ 3. CLIProcessAdapter  ➔ Claude Code / Cursor / Codex   │
+   │ (WebSocket)    │ (GPS)    │ 4. WebhookAdapter     ➔ Cualquier API o Bot custom     │
+   ▼                ▼          └────────────────────────────────────────────────────────┘
+ [ Open Voice Agent Server ] ─────────► [ STT Engine ] ──► [ Selected Agent ] ──► [ TTS Engine ]
+ (FastAPI + WebSockets + DB)            (Whisper/Groq)                              (Edge-TTS/Salomé)
 ```
 
 ---
 
-## 🇬🇧 English Overview
+## 🚀 Inicio Rápido (Servidor Backend)
 
-`OpenVoice Assistant` is a real-time, low-latency voice client and server framework built as an open-source Siri replacement for local and autonomous AI agents.
+### 1. Requisitos
+- Python 3.10+
+- Linux / macOS / Windows Server
 
-### 🌟 Key Features
-* **Sub-Second Latency:** Full-duplex WebSocket audio streaming for natural conversation flow.
-* **Hands-Free & Action Button Ready:** Native iOS Widget and Action Button bindings for instant activation.
-* **Modular Pipeline:** Plug-and-play support for Whisper STT, LLM engines, and high-fidelity TTS systems.
-
----
-
-## 🛠️ Quick Start
-
-### 1. Server Engine Setup
+### 2. Instalación
 ```bash
 git clone https://github.com/Wagustin/open-voice-agent.git
-cd open-voice-agent/server
+cd open-voice-agent/backend
+
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
-python main.py
+```
+
+### 3. Ejecutar el Servidor
+```bash
+uvicorn main:app --host 0.0.0.0 --port 8001 --reload
 ```
 
 ---
 
-## 📜 License
-MIT License © 2026 [Agustín Ventura Saldaña](https://github.com/Wagustin) & Kathy AI Core.
+## 📱 Clientes Móviles (Nativos)
+
+- 🍏 **iOS (`apps/ios/`):** Proyecto SwiftUI listo para Xcode con soporte para Action Button, CoreLocation y CoreMotion.
+- 🤖 **Android (`apps/android/`):** Servicio Kotlin con `AudioRecord`, `AudioTrack` y `FusedLocationProviderClient`.
+
+---
+
+## 📜 Licencia
+
+Desarrollado por **Agustín Ventura Saldaña**. Bajo la Licencia MIT.
