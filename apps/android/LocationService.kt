@@ -52,11 +52,13 @@ class LocationService : Service() {
                     put("activity_type", "automotive")
                 }
 
-                val body = json.toString().toRequestBody("application/json".toMediaType())
+                val requestBody = json.toString().toRequestBody("application/json".toMediaType())
+                val httpUrl = AgentSettings.getHttpLocationUrl(this)
+                val apiKey = AgentSettings.getApiKey(this)
                 val request = Request.Builder()
-                    .url("http://100.120.75.115:8001/api/v1/location/update")
-                    .addHeader("X-API-Key", "kathy-voice-secure-token")
-                    .post(body)
+                    .url(httpUrl)
+                    .addHeader("X-API-Key", apiKey)
+                    .post(requestBody)
                     .build()
 
                 httpClient.newCall(request).execute().close()

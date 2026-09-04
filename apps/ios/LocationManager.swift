@@ -10,8 +10,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var currentActivity: String = "stationary"
     @Published var isTracking: Bool = false
     
-    private let serverURL = URL(string: "http://100.120.75.115:8001/api/v1/location/update")!
-    private let apiKey = "kathy-voice-secure-token"
+    private var serverURL: URL { AgentSettings.locationHttpURL }
+    private var apiKey: String { AgentSettings.apiKey }
     
     override init() {
         super.init()

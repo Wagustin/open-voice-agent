@@ -12,7 +12,7 @@ class VoiceAgentManager: NSObject, ObservableObject, URLSessionWebSocketDelegate
     @Published var transcriptText: String = ""
     @Published var agentResponseText: String = ""
     
-    private let wsURL = URL(string: "ws://100.120.75.115:8001/ws/voice")!
+    private var wsURL: URL { AgentSettings.voiceWebSocketURL }
     
     func connect() {
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())

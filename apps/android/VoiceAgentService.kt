@@ -22,8 +22,9 @@ class VoiceAgentService : Service() {
     }
 
     private fun initWebSocket() {
+        val wsUrl = AgentSettings.getVoiceWebSocketUrl(this)
         val request = Request.Builder()
-            .url("ws://100.120.75.115:8001/ws/voice")
+            .url(wsUrl)
             .build()
 
         webSocket = client.newWebSocket(request, object : WebSocketListener() {

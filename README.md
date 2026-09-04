@@ -61,10 +61,31 @@ vinculación único.         para conectarte con mi app..."     ejecuta la insta
 ## 📱 Clientes Nativos (iOS & Android)
 
 - 🍏 **iOS (`apps/ios/`):** Cliente Swift/SwiftUI con `AppShortcutsProvider` para vinculación automática con el **Botón de Acción del iPhone** sin tutoriales manuales.
-- 🤖 **Android (`apps/android/`):** Servicio Kotlin con `AudioRecord`, `AudioTrack` y Tile de Ajustes Rápidos.
+- 🤖 **Android (`apps/android/`):** Servicio Kotlin con `VoiceInteractionService` (Asistente digital nativo del sistema) y Tile de Ajustes Rápidos.
+
+---
+
+## 🛡️ Estrategia de Publicación & Cumplimiento (App Store & Google Play)
+
+Para permitir que **Open Voice Agent** viva tanto como un sistema **100% privado y self-hosted** como una **aplicación pública aprobable en las tiendas oficiales**, la arquitectura se diseñó bajo los siguientes principios:
+
+### 1. 🔄 Arquitectura de Conexión Desacoplada (`AgentSettings`)
+* La app móvil no tiene IPs fijas congeladas en el código binario.
+* **Modo Privado:** El usuario vincula su servidor personal (vía Tailscale, Cloudflare Tunnel o IP local) con 1 solo prompt o escaneo QR.
+* **Modo Tienda (App Review):** Para la revisión de Apple y Google, la app incluye una pantalla de bienvenida con un **Servidor Demo Público HTTPS/WSS** y modo offline de demostración, garantizando que el revisor humano pueda probar el audio y la interfaz sin configurar un servidor propio (evitando el rechazo automático por Guideline 2.1).
+
+### 2. 🤖 Android (Google Play Store)
+* **Reemplazo Nativo del Asistente:** A diferencia de iOS, Android permite oficialmente reemplazar al asistente digital del sistema mediante `VoiceInteractionService` y el rol `ROLE_ASSISTANT`. El usuario puede configurar Open Voice Agent como asistente predeterminado desde los Ajustes del teléfono.
+* **Ubicación y Micrófono sin Bloqueos:** En lugar de solicitar `ACCESS_BACKGROUND_LOCATION` (que exige justificaciones manuales en video), el tracking y el audio se ejecutan bajo un **Foreground Service** con notificación persistente (`foregroundServiceType="location|microphone"`). Al ser visible para el usuario, Google Play lo aprueba de forma estándar.
+
+### 3. 🍏 iOS (Apple App Store)
+* **Integración Oficial con el Sistema:** Apple prohíbe explícitamente apps que afirmen "suplantar o reemplazar a Siri". La integración se realiza legalmente mediante **App Intents** y atajos configurados en el **Botón de Acción (Action Button)** del iPhone 15 Pro / 16.
+* **App Transport Security (ATS):** Todo el tráfico móvil en producción utiliza estrictamente **HTTPS** y **WSS** (WebSockets Secure).
+* **Privacy Manifest (`PrivacyInfo.xcprivacy`):** Inclusión obligatoria del manifiesto declarando las razones de acceso a APIs requeridas (`UserDefaults`, `CoreMotion`, geolocalización de bajo consumo con `startMonitoringSignificantLocationChanges`).
 
 ---
 
 ## 📜 Licencia
 
 Desarrollado por **Agustín Ventura Saldaña**. Disponible bajo la Licencia MIT.
+
